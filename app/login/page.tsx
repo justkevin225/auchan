@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Login() {
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
-      <Image src="/images/logo-mobile.png" alt="Auchan" width={100} height={100} />
+      <Image src="/images/logo-icon.png" alt="Auchan" width={100} height={100} />
       <h1>Login</h1>
       <Button asChild>
         <Link href="/dashboard">Aller au dashboard</Link>

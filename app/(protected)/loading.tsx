@@ -6,7 +6,7 @@ export default function Loading() {
   return (
     <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center gap-3 backdrop-blur-sm">
       <Image
-        src="/images/logo-mobile.png"
+        src="/images/logo-icon.png"
         alt=""
         width={120}
         height={48}

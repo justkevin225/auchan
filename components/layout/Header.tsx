@@ -219,7 +219,7 @@ export function Header() {
                 setMobileOpen(false);
               }}
             >
-              <span className="size-9 shrink-0 rounded-full bg-gray-300 flex items-center justify-center">
+              <span className="size-9 shrink-0 rounded-full bg-muted flex items-center justify-center">
                 <CircleUserIcon className="size-5 text-white" />
               </span>
               <span className="min-w-0 max-w-[180px] line-clamp-1">Kevin Kouakou</span>

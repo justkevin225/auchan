@@ -93,7 +93,11 @@
 }
 
 :root {
-  --font-sana: "Sana Sans Alt W00 Black", sans-serif;
+  --text-fluid-2xl: clamp(1.125rem, -1.0625rem + 10.9vw, 1.5rem);
+  --text-fluid-xl: clamp(1rem, -0.5rem + 7.5vw, 1.25rem);
+  --text-fluid-lg: clamp(0.9375rem, -0.25rem + 6.25vw, 1.125rem);
+  --text-fluid-base: clamp(0.875rem, 0.5rem + 1.25vw, 1rem);
+  --font-sana-black: "Sana Sans Alt W00 Black", sans-serif;
   --font-sana-thin: "Sana Sans Alt W00 Thin", sans-serif;
   --font-sana-light: "Sana Sans Alt W00 Light", sans-serif;
   --font-sana-book: "Sana Sans Alt W00 Book", sans-serif;
@@ -109,10 +113,10 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: rgba(224, 0, 26, 1);
   --primary-foreground: oklch(0.985 0 0);
-  --primary-muted: rgba(255, 189, 196, 1);
+  --primary-muted: rgba(255, 232, 232, 1);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: rgba(152, 152, 152, 0.4);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
@@ -126,6 +130,7 @@
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
   --radius: 0.625rem;
+  --radius-card: 40px;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: rgba(224, 0, 26, 1);
@@ -145,7 +150,7 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: rgba(224, 0, 26, 1);
   --primary-foreground: oklch(0.985 0 0);
-  --primary-muted: rgba(255, 189, 196, 0.35);
+  --primary-muted: rgba(255, 232, 232, 1);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -172,8 +177,11 @@
 }
 
 @theme inline {
+  --breakpoint-xs: 375px;
+  --breakpoint-sm: 576px;
   --font-sans: var(--font-sans);
   --font-sana: var(--font-sana);
+  --font-sana-black: var(--font-sana-black);
   --font-sana-thin: var(--font-sana-thin);
   --font-sana-light: var(--font-sana-light);
   --font-sana-book: var(--font-sana-book);
@@ -220,6 +228,11 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-card: var(--radius-card);
+  --font-size-fluid-2xl: var(--text-fluid-2xl);
+  --font-size-fluid-xl: var(--text-fluid-xl);
+  --font-size-fluid-lg: var(--text-fluid-lg);
+  --font-size-fluid-base: var(--text-fluid-base);
 }
 
 @layer base {
@@ -231,5 +244,29 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+  .text-fluid-base {
+    font-size: var(--text-fluid-base);
+  }
+  .text-fluid-lg {
+    font-size: var(--text-fluid-lg);
+  }
+  .text-fluid-xl {
+    font-size: var(--text-fluid-xl);
+  }
+  .text-fluid-2xl {
+    font-size: var(--text-fluid-2xl);
   }
 }

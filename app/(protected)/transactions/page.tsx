@@ -9,7 +9,7 @@ export default function Transactions() {
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
       <Image
-        src="/images/logo-mobile.png"
+        src="/images/logo-icon.png"
         alt="Auchan"
         width={100}
         height={100}
