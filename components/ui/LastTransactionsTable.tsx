@@ -37,7 +37,7 @@ export function LastTransactionsTable({
           <h2 className="text-lg lg:text-2xl font-sana-bold">
             Dernières transactions
           </h2>
-          <Button variant="outline" size="lg" className="text-base shrink-0" asChild>
+          <Button variant="outline" size="lg" className="shrink-0" asChild>
             <Link href="/transactions">
               <span className="hidden sm:inline">Toutes les transactions</span>
               <span className="sm:hidden">Voir tout</span>
@@ -99,7 +99,7 @@ export function LastTransactionsTable({
         <h2 className="text-lg lg:text-2xl font-sana-bold">
           Dernières transactions
         </h2>
-        <Button variant="outline" size="lg" className="text-base shrink-0" asChild>
+        <Button variant="outline" size="lg" className="shrink-0" asChild>
           <Link href="/transactions">
             <span className="hidden sm:inline">Toutes les transactions</span>
             <span className="sm:hidden">Voir tout</span>

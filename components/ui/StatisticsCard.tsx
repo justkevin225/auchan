@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   STATS_BY_PERIOD,
@@ -7,8 +14,6 @@ import {
   type StatsPeriodKey,
   type TransactionStatType,
 } from "@/data/stats";
-import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 const LABEL_BY_TYPE: Record<TransactionStatType, string> = {
@@ -27,7 +32,6 @@ type StatisticsCardProps = {
 
 export function StatisticsCard({ isLoading = false }: StatisticsCardProps) {
   const [period, setPeriod] = useState<StatsPeriodKey>("30days");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const stats = STATS_BY_PERIOD[period];
   const total = stats.total;
@@ -60,16 +64,18 @@ export function StatisticsCard({ isLoading = false }: StatisticsCardProps) {
           <h2 className="text-lg lg:text-2xl font-sana-bold text-foreground">
             Statistiques
           </h2>
-          <div className="relative">
-            <button
-              type="button"
-              className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-sm font-sana-regular text-foreground"
-              aria-label="Choisir la période"
-            >
-              <span>{STATS_PERIOD_LABELS[period]}</span>
-              <ChevronDown className="size-4" aria-hidden />
-            </button>
-          </div>
+          <Select value={period} onValueChange={(v) => setPeriod(v as StatsPeriodKey)}>
+            <SelectTrigger className="w-[180px]" size="sm" aria-label="Choisir la période">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {(Object.keys(STATS_PERIOD_LABELS) as StatsPeriodKey[]).map((key) => (
+                <SelectItem key={key} value={key}>
+                  {STATS_PERIOD_LABELS[key]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex flex-1 min-h-0 flex-col items-center justify-center gap-4 py-4 sm:gap-5 sm:py-6">
           <div className="relative flex shrink-0 items-center justify-center size-60 animate-pulse">
@@ -124,57 +130,18 @@ export function StatisticsCard({ isLoading = false }: StatisticsCardProps) {
         <h2 className="text-lg lg:text-2xl font-sana-bold text-foreground">
           Statistiques
         </h2>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setDropdownOpen((o) => !o)}
-            className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-sm font-sana-regular text-foreground transition-colors hover:bg-secondary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-haspopup="listbox"
-            aria-expanded={dropdownOpen}
-            aria-label="Choisir la période"
-          >
-            <span>{STATS_PERIOD_LABELS[period]}</span>
-            <ChevronDown
-              className={cn("size-4 transition-transform", dropdownOpen && "rotate-180")}
-              aria-hidden
-            />
-          </button>
-          {dropdownOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                aria-hidden
-                onClick={() => setDropdownOpen(false)}
-              />
-              <ul
-                role="listbox"
-                className="absolute right-0 top-full z-20 mt-1 min-w-[180px] rounded-lg border border-border bg-popover py-1 shadow-md"
-              >
-                {(Object.keys(STATS_PERIOD_LABELS) as StatsPeriodKey[]).map(
-                  (key) => (
-                    <li key={key} role="option" aria-selected={period === key}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPeriod(key);
-                          setDropdownOpen(false);
-                        }}
-                        className={cn(
-                          "w-full px-3 py-2 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
-                          period === key
-                            ? "font-sana-bold text-foreground"
-                            : "font-sana-regular text-foreground"
-                        )}
-                      >
-                        {STATS_PERIOD_LABELS[key]}
-                      </button>
-                    </li>
-                  )
-                )}
-              </ul>
-            </>
-          )}
-        </div>
+        <Select value={period} onValueChange={(v) => setPeriod(v as StatsPeriodKey)}>
+          <SelectTrigger size="lg" className="w-[180px]" aria-label="Choisir la période">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {(Object.keys(STATS_PERIOD_LABELS) as StatsPeriodKey[]).map((key) => (
+              <SelectItem key={key} value={key}>
+                {STATS_PERIOD_LABELS[key]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-1 min-h-0 flex-col items-center justify-center gap-4 py-4 sm:gap-5 sm:py-6">

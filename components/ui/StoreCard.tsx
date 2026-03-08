@@ -1,6 +1,7 @@
 'use client';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 import { ArrowUpRight, MapPin, Store } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,13 +11,18 @@ export type StoreCardProps = {
   storeId: string;
   location: string;
   isLoading?: boolean;
+  className?: string;
 };
 
-function StoreCard({ id, storeName, storeId, location, isLoading = false }: StoreCardProps) {
+function StoreCard({ id, storeName, storeId, location, isLoading = false, className }: StoreCardProps) {
   return (
     <Link
       href={isLoading ? '#' : `/stores/${id}`}
-      className={`group relative flex shrink-0 flex-col justify-between w-[250px] min-w-[250px] h-[200px] min-h-[200px] p-8 rounded-card bg-card text-card-foreground text-left transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-primary hover:text-primary-foreground ${isLoading ? 'pointer-events-none' : ''}`}
+      className={cn(
+        'group relative flex shrink-0 flex-col justify-between w-[250px] min-w-[250px] h-[200px] min-h-[200px] p-8 rounded-xl sm:rounded-2xl md:rounded-card bg-card text-card-foreground text-left transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-primary hover:text-primary-foreground',
+        isLoading && 'pointer-events-none',
+        className
+      )}
       aria-busy={isLoading}
     >
       {/* Top left light effect */}
