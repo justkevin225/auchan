@@ -1,20 +1,11 @@
-import { Metadata } from "next";
-import Image from "next/image";
-
-export const metadata: Metadata = {
-  title: "Auchan | Accueil",
-};
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen gap-4">
-      <Image
-        src="/images/logo-mobile.png"
-        alt="Auchan"
-        width={100}
-        height={100}
-      />
-      <h1>Accueil</h1>
-    </div>
-  );
+  const isAuthenticated = false;
+
+  if (isAuthenticated) {
+    redirect("/dashboard");
+  }
+
+  redirect("/login");
 }

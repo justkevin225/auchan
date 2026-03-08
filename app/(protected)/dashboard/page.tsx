@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: "Auchan | Dashboard",
 };
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  // await new Promise((r) => setTimeout(r, 3000));
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
       <Image
@@ -14,7 +15,7 @@ export default function Dashboard() {
         width={100}
         height={100}
       />
-      <h1>Dashboard</h1>
+      <h1>Tableau de bord</h1>
     </div>
   );
 }

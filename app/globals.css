@@ -15,16 +15,101 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Sana Sans Alt W00 Regular";
+  src:
+    url("/fonts/sana-sans-alt-regular.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-regular.woff") format("woff"),
+    url("/fonts/sana-sans-alt-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sana Sans Alt W00 Thin";
+  src:
+    url("/fonts/sana-sans-alt-thin.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-thin.woff") format("woff"),
+    url("/fonts/sana-sans-alt-thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sana Sans Alt W00 Light";
+  src:
+    url("/fonts/sana-sans-alt-light.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-light.woff") format("woff"),
+    url("/fonts/sana-sans-alt-light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sana Sans Alt W00 Book";
+  src:
+    url("/fonts/sana-sans-alt-book.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-book.woff") format("woff"),
+    url("/fonts/sana-sans-alt-book.ttf") format("truetype");
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sana Sans Alt W00 Medium";
+  src:
+    url("/fonts/sana-sans-alt-medium.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-medium.woff") format("woff"),
+    url("/fonts/sana-sans-alt-medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sana Sans Alt W00 Bold";
+  src:
+    url("/fonts/sana-sans-alt-bold.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-bold.woff") format("woff"),
+    url("/fonts/sana-sans-alt-bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sana Sans Alt W00 Heavy";
+  src:
+    url("/fonts/sana-sans-alt-heavy.woff2") format("woff2"),
+    url("/fonts/sana-sans-alt-heavy.woff") format("woff"),
+    url("/fonts/sana-sans-alt-heavy.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --font-sana: "Sana Sans Alt W00 Black", sans-serif;
-  --background: oklch(1 0 0);
+  --font-sana-thin: "Sana Sans Alt W00 Thin", sans-serif;
+  --font-sana-light: "Sana Sans Alt W00 Light", sans-serif;
+  --font-sana-book: "Sana Sans Alt W00 Book", sans-serif;
+  --font-sana-regular: "Sana Sans Alt W00 Regular", sans-serif;
+  --font-sana-medium: "Sana Sans Alt W00 Medium", sans-serif;
+  --font-sana-bold: "Sana Sans Alt W00 Bold", sans-serif;
+  --font-sana-heavy: "Sana Sans Alt W00 Heavy", sans-serif;
+  --background: rgba(244, 244, 247, 1);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: rgba(224, 0, 26, 1);
   --primary-foreground: oklch(0.985 0 0);
+  --primary-muted: rgba(255, 189, 196, 1);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -43,16 +128,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: rgba(224, 0, 26, 1);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-}
-
-body {
-  font-family: var(--font-sana);
 }
 
 .dark {
@@ -62,8 +143,9 @@ body {
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.87 0.00 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: rgba(224, 0, 26, 1);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-muted: rgba(255, 189, 196, 0.35);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -81,7 +163,7 @@ body {
   --chart-5: oklch(0.424 0.199 265.638);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: rgba(224, 0, 26, 1);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -91,6 +173,14 @@ body {
 
 @theme inline {
   --font-sans: var(--font-sans);
+  --font-sana: var(--font-sana);
+  --font-sana-thin: var(--font-sana-thin);
+  --font-sana-light: var(--font-sana-light);
+  --font-sana-book: var(--font-sana-book);
+  --font-sana-regular: var(--font-sana-regular);
+  --font-sana-medium: var(--font-sana-medium);
+  --font-sana-bold: var(--font-sana-bold);
+  --font-sana-heavy: var(--font-sana-heavy);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -116,6 +206,7 @@ body {
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-muted: var(--primary-muted);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -136,7 +227,7 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sana-regular;
   }
   html {
     @apply font-sans;
