@@ -1,8 +1,9 @@
 "use client";
 
+import { useClickOutside } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon, CheckIcon } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 
 export type MultiSelectOption = { value: string; label: string };
 
@@ -33,17 +34,7 @@ export function MultiSelect({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) {
-      document.addEventListener("click", handleClickOutside);
-      return () => document.removeEventListener("click", handleClickOutside);
-    }
-  }, [open]);
+  useClickOutside(ref, () => setOpen(false), open);
 
   const toggle = (optValue: string) => {
     const next = value.includes(optValue)

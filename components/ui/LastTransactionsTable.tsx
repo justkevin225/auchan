@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Transaction } from "@/data/transactions";
+import { formatAmountFCFA } from "@/lib/format";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
@@ -18,11 +19,6 @@ type LastTransactionsTableProps = {
   transactions: Transaction[];
   isLoading?: boolean;
 };
-
-function formatAmount(amount: number): string {
-  const sign = amount >= 0 ? "+" : "";
-  return `${sign}${amount} FCFA`;
-}
 
 const TABLE_SKELETON_ROWS = 6;
 
@@ -138,7 +134,7 @@ export function LastTransactionsTable({
                       : "text-red-600 font-sana-medium shrink-0"
                   }
                 >
-                  {formatAmount(tx.amount)}
+                  {formatAmountFCFA(tx.amount)}
                 </span>
               </div>
 
@@ -187,7 +183,7 @@ export function LastTransactionsTable({
                         : "text-red-600 font-sana-medium"
                     }
                   >
-                    {formatAmount(tx.amount)}
+                    {formatAmountFCFA(tx.amount)}
                   </span>
                 </TableCell>
                 <TableCell className="hidden lg:table-cell">{tx.client}</TableCell>

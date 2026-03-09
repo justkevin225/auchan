@@ -20,10 +20,11 @@ import {
 import {
   clearStoreDetailsCache,
   getStoreTransactions,
-  type StoreTransaction,
 } from "@/data/storeDetails";
-import type { TransactionType } from "@/data/transactions";
-import { usePagination } from "@/lib/usePagination";
+import { filterTransactions } from "@/lib/filters";
+import { formatAmountFCFA } from "@/lib/format";
+import { usePagination } from "@/lib/hooks";
+import { getPaginationPages } from "@/lib/pagination";
 import { MoreHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { TableToolbar } from "./TableToolbar";
@@ -34,48 +35,6 @@ const FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: "Rendu monnaie", label: "Rendu monnaie" },
   { value: "Paiement course", label: "Paiement course" },
 ];
-
-function formatAmount(amount: number): string {
-  const sign = amount >= 0 ? "+" : "";
-  return `${sign}${amount.toLocaleString("fr-FR")} FCFA`;
-}
-
-function parseTransactionDate(dateStr: string): string {
-  const [dPart] = dateStr.split(",");
-  if (!dPart) return "";
-  const [day, month, year] = dPart.trim().split("/");
-  if (!year || !month || !day) return "";
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-}
-
-function filterTransactions(
-  list: StoreTransaction[],
-  search: string,
-  typeFilter: string,
-  dateFrom: string,
-  dateTo: string
-): StoreTransaction[] {
-  let out = list;
-  if (typeFilter !== "tous") {
-    out = out.filter((t) => t.type === (typeFilter as TransactionType));
-  }
-  if (dateFrom) {
-    out = out.filter((t) => parseTransactionDate(t.date) >= dateFrom);
-  }
-  if (dateTo) {
-    out = out.filter((t) => parseTransactionDate(t.date) <= dateTo);
-  }
-  if (search.trim()) {
-    const q = search.trim().toLowerCase();
-    out = out.filter(
-      (t) =>
-        t.id.includes(q) ||
-        t.type.toLowerCase().includes(q) ||
-        t.client.includes(q)
-    );
-  }
-  return out;
-}
 
 type StoreTransactionsTableProps = {
   storeId: string;
@@ -168,7 +127,7 @@ export function StoreTransactionsTable({ storeId }: StoreTransactionsTableProps)
                     : "text-red-600 font-sana-medium"
                 }
               >
-                {formatAmount(tx.amount)}
+                {formatAmountFCFA(tx.amount)}
               </span>
             </div>
             <div className="flex justify-between text-sm text-muted-foreground">
@@ -204,7 +163,7 @@ export function StoreTransactionsTable({ storeId }: StoreTransactionsTableProps)
                         : "text-red-600 font-sana-medium"
                     }
                   >
-                    {formatAmount(tx.amount)}
+                    {formatAmountFCFA(tx.amount)}
                   </span>
                 </TableCell>
                 <TableCell className="hidden lg:table-cell">{tx.client}</TableCell>
@@ -239,35 +198,20 @@ export function StoreTransactionsTable({ storeId }: StoreTransactionsTableProps)
                   className={!hasPrev ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
-              {Array.from(
-                {
-                  length: Math.min(totalPages, 7),
-                },
-                (_, i) => {
-                  const page =
-                    totalPages <= 7
-                      ? i + 1
-                      : currentPage <= 4
-                        ? i + 1
-                        : currentPage >= totalPages - 3
-                          ? totalPages - 6 + i
-                          : currentPage - 3 + i;
-                  return (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(page);
-                        }}
-                        isActive={page === currentPage}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                }
-              )}
+              {getPaginationPages(currentPage, totalPages).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage(page);
+                    }}
+                    isActive={page === currentPage}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
               <PaginationItem>
                 <PaginationNext
                   href="#"

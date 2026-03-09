@@ -5,27 +5,15 @@ import {
   getCaissierRecentTransactions,
   getCaissierStoreHistory,
   type CaissierRecentTransaction,
-  type CaissierStoreHistoryItem,
   type StoreCaissier,
 } from "@/data/storeDetails";
+import { formatAmountFCFA, formatStoreHistoryPeriod } from "@/lib/format";
 import { X } from "lucide-react";
 
 type CaissierDetailsPanelProps = {
   caissier: StoreCaissier;
   onClose: () => void;
 };
-
-function formatPeriod(item: CaissierStoreHistoryItem): string {
-  if (item.dateTo === null) {
-    return `Depuis le ${item.dateFrom}`;
-  }
-  return `Du ${item.dateFrom} au ${item.dateTo}`;
-}
-
-function formatAmount(amount: number): string {
-  const sign = amount >= 0 ? "+" : "";
-  return `${sign}${amount.toLocaleString("fr-FR")} FCFA`;
-}
 
 export function CaissierDetailsPanel({ caissier, onClose }: CaissierDetailsPanelProps) {
   const storeHistory = getCaissierStoreHistory(caissier.id);
@@ -76,7 +64,7 @@ export function CaissierDetailsPanel({ caissier, onClose }: CaissierDetailsPanel
                         : item.storeName}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {formatPeriod(item)}
+                      {formatStoreHistoryPeriod(item.dateFrom, item.dateTo)}
                     </span>
                   </div>
                   <Button
@@ -108,7 +96,7 @@ export function CaissierDetailsPanel({ caissier, onClose }: CaissierDetailsPanel
               >
                 <span className="text-foreground">{tx.type}</span>
                 <span className="font-sana-medium text-foreground">
-                  {formatAmount(tx.amount)}
+                  {formatAmountFCFA(tx.amount)}
                 </span>
               </li>
             ))}

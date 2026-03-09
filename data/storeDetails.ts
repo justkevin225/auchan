@@ -24,7 +24,7 @@ export type CaissierStoreHistoryItem = {
   storeName: string;
   location: string;
   dateFrom: string;
-  dateTo: string | null; // null = "Depuis le ..." (affectation en cours)
+  dateTo: string | null;
 };
 
 export type CaissierRecentTransaction = {

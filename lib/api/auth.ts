@@ -7,11 +7,9 @@ export type LoginError = {
   message: string;
 };
 
-/**
- * Simulation d'un appel réseau de connexion.
- */
+// Simulation d'un appel réseau de connexion
 export function login(credentials: LoginCredentials): Promise<void> {
-  const delay = 800 + Math.floor(Math.random() * 400); // Delai entre 800ms et 1200ms
+  const delay = 800 + Math.floor(Math.random() * 400);
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {

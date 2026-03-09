@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-/** Toutes les routes sous app/(protected)/ */
+// Routes protégées (app/(protected)/)
 const PROTECTED_PATHS = [
   "/dashboard",
   "/stores",
@@ -11,7 +11,7 @@ const PROTECTED_PATHS = [
   "/statistics",
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtectedRoute = PROTECTED_PATHS.some((path) =>
@@ -50,4 +50,3 @@ export const config = {
     "/statistics/:path*",
   ],
 };
-

@@ -9,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   Table,
   TableBody,
@@ -21,9 +22,10 @@ import {
   clearStoreDetailsCache,
   getStoreCaissiers,
   type StoreCaissier,
-  type StoreCaissierStatut,
 } from "@/data/storeDetails";
-import { usePagination } from "@/lib/usePagination";
+import { filterCaissiers } from "@/lib/filters";
+import { usePagination } from "@/lib/hooks";
+import { getPaginationPages } from "@/lib/pagination";
 import { cn } from "@/lib/utils";
 import {
   Eye,
@@ -42,55 +44,6 @@ const STATUT_OPTIONS: { value: string; label: string }[] = [
   { value: "Actif", label: "Actif" },
   { value: "Bloqué", label: "Bloqué" },
 ];
-
-function parseAffectationDate(dateStr: string): string {
-  const [dPart] = dateStr.split(",");
-  if (!dPart) return "";
-  const [day, month, year] = dPart.trim().split("/");
-  if (!year || !month || !day) return "";
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-}
-
-function filterCaissiers(
-  list: StoreCaissier[],
-  search: string,
-  selectedStatuts: string[],
-  dateFrom: string,
-  dateTo: string
-): StoreCaissier[] {
-  let out = list;
-  if (selectedStatuts.length > 0 && selectedStatuts.length < STATUT_OPTIONS.length) {
-    out = out.filter((c) => selectedStatuts.includes(c.statut));
-  }
-  if (dateFrom) {
-    out = out.filter((c) => parseAffectationDate(c.dateAffectation) >= dateFrom);
-  }
-  if (dateTo) {
-    out = out.filter((c) => parseAffectationDate(c.dateAffectation) <= dateTo);
-  }
-  if (search.trim()) {
-    const q = search.trim().toLowerCase();
-    out = out.filter(
-      (c) =>
-        c.utilisateur.toLowerCase().includes(q) ||
-        c.accessKey.includes(q)
-    );
-  }
-  return out;
-}
-
-function StatusBadge({ statut }: { statut: StoreCaissierStatut }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-sana-medium text-white",
-        statut === "Actif" ? "bg-green-600" : "bg-muted-foreground/80"
-      )}
-    >
-      {statut}
-    </span>
-  );
-}
 
 type StoreCaissiersTableProps = {
   storeId: string;
@@ -144,8 +97,10 @@ export function StoreCaissiersTable({
         allCaissiers,
         search,
         selectedStatuts,
+        STATUT_OPTIONS.length,
         dateFrom,
-        dateTo
+        dateTo,
+        (c) => c.dateAffectation
       ),
     [allCaissiers, search, selectedStatuts, dateFrom, dateTo]
   );
@@ -338,14 +293,7 @@ export function StoreCaissiersTable({
                   className={!hasPrev ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
-              {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                let page: number;
-                if (totalPages <= 7) page = i + 1;
-                else if (currentPage <= 4) page = i + 1;
-                else if (currentPage >= totalPages - 3)
-                  page = totalPages - 6 + i;
-                else page = currentPage - 3 + i;
-                return (
+              {getPaginationPages(currentPage, totalPages).map((page) => (
                   <PaginationItem key={page}>
                     <PaginationLink
                       href="#"
@@ -358,8 +306,7 @@ export function StoreCaissiersTable({
                       {page}
                     </PaginationLink>
                   </PaginationItem>
-                );
-              })}
+              ))}
               <PaginationItem>
                 <PaginationNext
                   href="#"

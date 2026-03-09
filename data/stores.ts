@@ -127,7 +127,7 @@ function mockDetails(store: StoreStatic): StoreDetails {
   let total = byType["Rendu monnaie"] + byType["Paiement course"];
   let nombreCaissiers = 5 + (index % 8);
 
-  // Données maquette pour le premier magasin (Angré Djibi 1)
+  // Maquette Angré Djibi 1
   if (store.id === "M0001") {
     total = 1253;
     nombreCaissiers = 7;

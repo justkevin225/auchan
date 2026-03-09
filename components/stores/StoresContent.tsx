@@ -18,31 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import StoreCard from "@/components/ui/StoreCard";
-import { ALL_STORES, COMMUNES, type CommuneKey, type StoreStatic } from "@/data/stores";
+import { ALL_STORES, COMMUNES, type CommuneKey } from "@/data/stores";
+import { filterStores } from "@/lib/filters";
 import { Plus, Search, SearchX } from "lucide-react";
-import Link from 'next/link';
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 const PAGE_SIZE = 12;
-
-function filterStores(
-  stores: StoreStatic[],
-  search: string,
-  commune: CommuneKey
-): StoreStatic[] {
-  const q = search.trim().toLowerCase();
-  return stores.filter((s) => {
-    const matchCommune = commune === "Toutes" || s.commune === commune;
-    if (!matchCommune) return false;
-    if (!q) return true;
-    return (
-      s.storeName.toLowerCase().includes(q) ||
-      s.storeId.toLowerCase().includes(q) ||
-      s.commune.toLowerCase().includes(q) ||
-      s.location.toLowerCase().includes(q)
-    );
-  });
-}
 
 export function StoresContent() {
   const [search, setSearch] = useState("");

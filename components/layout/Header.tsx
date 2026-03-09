@@ -15,8 +15,9 @@ import { ChevronDown, CircleUserIcon, LogOut, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { Button } from '../ui/button';
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useClickOutside } from "@/lib/hooks";
 
 const MOCK_USER_DISPLAY_NAME = "Kevin Kouakou";
 
@@ -96,26 +97,8 @@ export function Header() {
     setLogoutDialogOpen(true);
   };
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-      if (
-        userDropdownRef.current &&
-        !userDropdownRef.current.contains(e.target as Node)
-      ) {
-        setUserDropdownOpen(false);
-      }
-    }
-    if (dropdownOpen || userDropdownOpen) {
-      document.addEventListener("click", handleClickOutside);
-      return () => document.removeEventListener("click", handleClickOutside);
-    }
-  }, [dropdownOpen, userDropdownOpen]);
+  useClickOutside(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
+  useClickOutside(userDropdownRef, () => setUserDropdownOpen(false), userDropdownOpen);
 
   return (
     <header className="fixed top-0 w-[90%] max-w-[1350px] left-1/2 -translate-x-1/2 z-50 bg-white rounded-2xl px-4 py-2 mt-4 font-sana-bold">

@@ -42,7 +42,7 @@ export function StatisticsCard({ isLoading = false }: StatisticsCardProps) {
 
   const strokeWidth = 10;
   const radius = 40;
-  const circumference = useMemo(() => 2 * Math.PI * radius, []); // circumference = 2 * π * radius
+  const circumference = useMemo(() => 2 * Math.PI * radius, []); // circonférence = 2πr
   const renduLength = (renduPercent / 100) * circumference;
   const paiementLength = (paiementPercent / 100) * circumference;
 

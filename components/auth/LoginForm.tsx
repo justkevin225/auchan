@@ -169,6 +169,7 @@ export function LoginForm() {
             >
               OTP
             </Link>
+
             <Link
               href="/new-password"
               className="text-xs font-medium text-primary hover:underline sm:text-sm"
