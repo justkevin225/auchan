@@ -28,7 +28,7 @@ export function LastTransactionsTable({
 }: LastTransactionsTableProps) {
   if (isLoading) {
     return (
-      <div className="flex flex-col bg-white rounded-xl sm:rounded-2xl md:rounded-card overflow-hidden min-w-0">
+      <div className="p-5 flex flex-col bg-white rounded-xl sm:rounded-2xl md:rounded-card overflow-hidden min-w-0">
         <div className="flex flex-wrap gap-2 items-center justify-between shrink-0 p-4 sm:p-5 md:p-6 md:px-0">
           <h2 className="text-lg lg:text-2xl font-sana-bold">
             Dernières transactions
@@ -59,7 +59,7 @@ export function LastTransactionsTable({
             </div>
           ))}
         </div>
-        <div className="hidden md:block px-4 pb-4 lg:px-6 lg:pb-6 min-w-0">
+        <div className="hidden md:block pb-4 lg:pb-6 min-w-0">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow className="bg-muted/30">
@@ -90,7 +90,7 @@ export function LastTransactionsTable({
   }
 
   return (
-    <div className="flex flex-col bg-white rounded-xl sm:rounded-2xl md:rounded-card overflow-hidden min-w-0">
+    <div className="px-5 flex flex-col bg-white rounded-xl sm:rounded-2xl md:rounded-card overflow-hidden min-w-0">
       <div className="flex flex-wrap gap-2 items-center justify-between shrink-0 p-4 sm:p-5 md:p-6">
         <h2 className="text-lg lg:text-2xl font-sana-bold">
           Dernières transactions
