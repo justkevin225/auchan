@@ -33,7 +33,7 @@ export function LastTransactionsTable({
   if (isLoading) {
     return (
       <div className="flex flex-col bg-white rounded-xl sm:rounded-2xl md:rounded-card overflow-hidden min-w-0">
-        <div className="flex flex-wrap gap-2 items-center justify-between shrink-0 p-4 sm:p-5 md:p-6">
+        <div className="flex flex-wrap gap-2 items-center justify-between shrink-0 p-4 sm:p-5 md:p-6 md:px-0">
           <h2 className="text-lg lg:text-2xl font-sana-bold">
             Dernières transactions
           </h2>
@@ -45,7 +45,7 @@ export function LastTransactionsTable({
             </Link>
           </Button>
         </div>
-        <div className="px-4 pb-4 md:hidden space-y-3">
+        <div className="pb-4 md:hidden space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="flex flex-col gap-2 p-3 rounded-lg border bg-muted/5">
               <div className="flex justify-between">
@@ -152,7 +152,7 @@ export function LastTransactionsTable({
       </div>
 
       {/* Vue table — lg and above */}
-      <div className="hidden md:block px-4 pb-4 lg:px-6 lg:pb-6 min-w-0 overflow-x-auto">
+      <div className="hidden md:block pb-4 lg:pb-6 min-w-0">
         <Table className="min-w-[640px]">
           <TableHeader>
             <TableRow className="bg-muted/30">

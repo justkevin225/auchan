@@ -1,9 +1,19 @@
+import type { TransactionStatType } from "@/data/stats";
+
 export type StoreStatic = {
   id: string;
   storeName: string;
   storeId: string;
   location: string;
   commune: string;
+};
+
+export type StoreDetails = StoreStatic & {
+  manager: string;
+  responsableCaisse: string;
+  nombreCaissiers: number;
+  nombreTransactions: number;
+  transactionByType: Record<TransactionStatType, number>;
 };
 
 export const COMMUNES = [
@@ -53,3 +63,98 @@ export const ALL_STORES: StoreStatic[] = [
   ...TOP_STORES,
   ...EXTRA_STORES.map((s) => ({ ...s, id: s.storeId })),
 ];
+
+const MOCK_MANAGERS = [
+  "Emmanuel GUIEBI",
+  "Marie KOUASSI",
+  "Jean AKÉ",
+  "Fatou DIALLO",
+  "Paul BAMBA",
+  "Aïcha TOURE",
+  "Ibrahim SANGARÉ",
+  "Sophie KONE",
+  "Oumar FOFANA",
+  "Adama TRAORÉ",
+  "Aminata COULIBALY",
+  "Moussa KEITA",
+  "Nadia OUATTARA",
+  "Bakary DIALLO",
+  "Kadiatou SOW",
+  "Lamine BERTÉ",
+  "Mariam SIDIBÉ",
+  "Seydou KANÉ",
+  "Ramatoulaye BA",
+  "Ibrahima BARRY",
+];
+
+const MOCK_RESPONSABLES_CAISSE = [
+  "Ismael DIOMANDE",
+  "Yves KOFFI",
+  "Clément ADOU",
+  "Ruth BONI",
+  "Serge YAPO",
+  "Esther KOUAME",
+  "David N'GUESSAN",
+  "Rachel AKA",
+  "Laurent BAMBA",
+  "Sarah KONE",
+  "Pierre OUATTARA",
+  "Julie TRAORÉ",
+  "Marc SANGARÉ",
+  "Anne DIALLO",
+  "Luc KOUASSI",
+  "Marie TOURE",
+  "Jean-Marc FOFANA",
+  "Claire KEITA",
+  "Philippe COULIBALY",
+  "Sandra BERTÉ",
+];
+
+function mockTransactionByType(storeId: string): Record<TransactionStatType, number> {
+  const seed = storeId.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const total = 800 + (seed % 800);
+  const rendu = Math.floor(total * (0.4 + (seed % 30) / 100));
+  return {
+    "Rendu monnaie": rendu,
+    "Paiement course": total - rendu,
+  };
+}
+
+function mockDetails(store: StoreStatic): StoreDetails {
+  const indexInList = ALL_STORES.findIndex((s) => s.id === store.id);
+  const index = indexInList >= 0 ? indexInList : parseInt(store.id.replace(/\D/g, ""), 10) || 0;
+  let byType = mockTransactionByType(store.id);
+  let total = byType["Rendu monnaie"] + byType["Paiement course"];
+  let nombreCaissiers = 5 + (index % 8);
+
+  // Données maquette pour le premier magasin (Angré Djibi 1)
+  if (store.id === "M0001") {
+    total = 1253;
+    nombreCaissiers = 7;
+    byType = {
+      "Rendu monnaie": 878,
+      "Paiement course": 375,
+    };
+  }
+
+  return {
+    ...store,
+    manager: MOCK_MANAGERS[index % MOCK_MANAGERS.length],
+    responsableCaisse: MOCK_RESPONSABLES_CAISSE[index % MOCK_RESPONSABLES_CAISSE.length],
+    nombreCaissiers,
+    nombreTransactions: total,
+    transactionByType: byType,
+  };
+}
+
+const STORE_DETAILS_CACHE = new Map<string, StoreDetails>();
+
+export function getStoreDetails(id: string): StoreDetails | null {
+  const cached = STORE_DETAILS_CACHE.get(id);
+  if (cached) return cached;
+  const store = ALL_STORES.find((s) => s.id === id);
+  if (!store) return null;
+  const details = mockDetails(store);
+  STORE_DETAILS_CACHE.set(id, details);
+  return details;
+}
