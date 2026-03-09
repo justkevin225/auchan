@@ -1,6 +1,8 @@
 import { BreadcrumbBar } from "@/components/layout/BreadcrumbBar";
 import { Header } from "@/components/layout/Header";
 
+export const dynamic = "force-dynamic";
+
 export default function ProtectedLayout({
   children,
 }: {
