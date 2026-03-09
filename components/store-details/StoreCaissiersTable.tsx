@@ -94,9 +94,15 @@ function StatusBadge({ statut }: { statut: StoreCaissierStatut }) {
 
 type StoreCaissiersTableProps = {
   storeId: string;
+  selectedCaissier: StoreCaissier | null;
+  onCaissierSelect: (caissier: StoreCaissier | null) => void;
 };
 
-export function StoreCaissiersTable({ storeId }: StoreCaissiersTableProps) {
+export function StoreCaissiersTable({
+  storeId,
+  selectedCaissier,
+  onCaissierSelect,
+}: StoreCaissiersTableProps) {
   const [search, setSearch] = useState("");
   const [selectedStatuts, setSelectedStatuts] = useState<string[]>(() =>
     STATUT_OPTIONS.map((o) => o.value)
@@ -184,7 +190,19 @@ export function StoreCaissiersTable({ storeId }: StoreCaissiersTableProps) {
         {paginatedItems.map((c) => (
           <div
             key={c.id}
-            className="flex flex-col gap-2 p-3 rounded-lg border bg-muted/5"
+            role="button"
+            tabIndex={0}
+            className={cn(
+              "flex flex-col gap-2 p-3 rounded-lg border bg-muted/5 cursor-pointer hover:bg-muted/10 transition-colors",
+              selectedCaissier?.id === c.id && "ring-2 ring-primary/30"
+            )}
+            onClick={() => onCaissierSelect(c)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onCaissierSelect(c);
+              }
+            }}
           >
             <div className="flex justify-between items-center">
               <span className="font-sana-medium text-sm">{c.utilisateur}</span>
@@ -229,9 +247,16 @@ export function StoreCaissiersTable({ storeId }: StoreCaissiersTableProps) {
           </TableHeader>
           <TableBody>
             {paginatedItems.map((c) => (
-              <TableRow key={c.id} className="hover:bg-muted/10">
+              <TableRow
+                key={c.id}
+                className={cn(
+                  "hover:bg-muted/10 cursor-pointer",
+                  selectedCaissier?.id === c.id && "bg-primary/5"
+                )}
+                onClick={() => onCaissierSelect(c)}
+              >
                 <TableCell className="font-medium">{c.utilisateur}</TableCell>
-                <TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <span className="inline-flex items-center gap-1.5">
                     <span className="font-mono">
                       {visibleKeys.has(c.id) ? c.accessKey : "••••"}
@@ -255,7 +280,7 @@ export function StoreCaissiersTable({ storeId }: StoreCaissiersTableProps) {
                 <TableCell>
                   <StatusBadge statut={c.statut} />
                 </TableCell>
-                <TableCell className="text-right p-1">
+                <TableCell className="text-right p-1" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-end gap-0.5">
                     <Button
                       variant="ghost"

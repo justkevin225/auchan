@@ -10,8 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { login } from "@/lib/api/auth";
 import { getSafeRedirectFrom } from "@/lib/auth";
-import { AlertCircle, Info } from "lucide-react";
-import { toast } from "sonner";
+import { AlertCircle, Info, X } from "lucide-react";
 
 export function LoginForm() {
   const router = useRouter();
@@ -31,8 +30,6 @@ export function LoginForm() {
       try {
         await login({ username, password });
         document.cookie = "auth=true; path=/;";
-        document.cookie = `auth_user=${encodeURIComponent(username)}; path=/;`;
-        toast.success("Connexion réussie");
         const redirectTo = getSafeRedirectFrom(searchParams.get("from"));
         router.push(redirectTo ?? "/dashboard");
       } catch (error: unknown) {
@@ -57,7 +54,7 @@ export function LoginForm() {
 
   const infoContent = errorMessage ? (
     <p>
-      {errorMessage} Utilisez l’identifiant <b>admin</b> et le mot de passe{" "}
+      {errorMessage}. Utilisez l’identifiant <b>admin</b> et le mot de passe{" "}
       <b>admin</b>.
     </p>
   ) : (
@@ -82,11 +79,11 @@ export function LoginForm() {
       </div>
 
       {/* Carte de connexion */}
-      <div className="relative z-10 w-[90%] max-w-[380px] rounded-[24px] bg-white px-3 py-3 shadow-[10px_10px_0px_0px_var(--primary-muted)] sm:px-8 sm:py-8">
-        <h1 className="text-lg font-sana-heavy tracking-tight text-black sm:text-3xl">
+      <div className="relative z-10 w-[90%] max-w-[380px] rounded-[24px] bg-white p-8 shadow-[10px_10px_0px_0px_var(--primary-muted)]">
+        <h1 className="font-sana-heavy tracking-tight text-black text-2xl sm:text-3xl">
           Connexion
         </h1>
-        <p className="text-sm font-sana-regular text-black/90 sm:text-base">
+        <p className=" font-sana-regular text-black/90 text-base">
           Saisissez vos identifiants pour vous connecter
         </p>
 
@@ -104,7 +101,7 @@ export function LoginForm() {
               autoComplete="username"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              className="h-11 rounded-xl border-[#CCCCCC] bg-white text-black placeholder:text-black/40 focus-visible:border-primary focus-visible:ring-primary/30"
+              className="h-11 rounded-xl border-[#CCCCCC] bg-white text-black placeholder:text-black/40 focus-visible:border-muted focus-visible:ring-muted/50"
               size="lg"
             />
           </div>
@@ -122,7 +119,7 @@ export function LoginForm() {
               autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="h-11 rounded-xl border-[#CCCCCC] bg-white text-black placeholder:text-black/40 focus-visible:border-primary focus-visible:ring-primary/30"
+              className="h-11 rounded-xl border-[#CCCCCC] bg-white text-black placeholder:text-black/40 focus-visible:border-muted focus-visible:ring-muted/50"
               size="lg"
             />
             <div className="flex justify-end">
@@ -142,24 +139,48 @@ export function LoginForm() {
               : "bg-muted/40 border border-muted/30"
               }`}
           >
-            <span
-              className={`flex items-center gap-2 font-semibold ${isError ? "text-destructive" : ""
-                }`}
-            >
-              {isError ? (
-                <AlertCircle className="size-4 shrink-0" aria-hidden />
-              ) : (
-                <Info className="size-4 shrink-0" aria-hidden />
-              )}
-              {isError ? "Erreur" : "Information"}
-            </span>
+            <div className="flex items-center justify-between">
+              <span
+                className={`flex items-center gap-2 font-semibold ${isError ? "text-destructive" : ""
+                  }`}
+              >
+                {isError ? (
+                  <AlertCircle className="size-4 shrink-0" aria-hidden />
+                ) : (
+                  <Info className="size-4 shrink-0" aria-hidden />
+                )}
+                {isError ? "Erreur" : "Information"}
+              </span>
+
+              {
+                errorMessage && (
+                  <X className="size-4 shrink-0 cursor-pointer" aria-hidden onClick={() => setErrorMessage(null)} />
+                )
+              }
+
+            </div>
             {infoContent}
+          </div>
+
+          <div className="flex flex-wrap gap-2 font-sana-bold">
+            <Link
+              href="/otp"
+              className="text-xs font-medium text-primary hover:underline sm:text-sm"
+            >
+              OTP
+            </Link>
+            <Link
+              href="/new-password"
+              className="text-xs font-medium text-primary hover:underline sm:text-sm"
+            >
+              Nouveau mot de passe
+            </Link>
           </div>
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="mt-2 h-11 w-full gap-2 rounded-xl bg-primary font-semibold text-white hover:bg-primary/80 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-70"
+            className="h-11 w-full gap-2 rounded-xl bg-primary font-semibold text-white hover:bg-primary/80 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-70"
           >
             {isLoading ? (
               <>

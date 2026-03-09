@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: "Auchan | Statistiques",
 };
 
-export default function Statistics() {
+export default async function Statistics() {
+  await new Promise(resolve => setTimeout(resolve, 1000)); // intentionnelle
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
       <Image

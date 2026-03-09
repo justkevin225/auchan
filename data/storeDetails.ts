@@ -19,6 +19,20 @@ export type StoreCaissier = {
   statut: StoreCaissierStatut;
 };
 
+export type CaissierStoreHistoryItem = {
+  id: string;
+  storeName: string;
+  location: string;
+  dateFrom: string;
+  dateTo: string | null; // null = "Depuis le ..." (affectation en cours)
+};
+
+export type CaissierRecentTransaction = {
+  id: string;
+  type: string;
+  amount: number;
+};
+
 const MOCK_CLIENTS = [
   "+225 07 63 32 22 32",
   "+225 05 12 34 56 78",
@@ -100,4 +114,53 @@ export function getStoreCaissiers(storeId: string): StoreCaissier[] {
 export function clearStoreDetailsCache(): void {
   TRANSACTIONS_CACHE.clear();
   CAISSIERS_CACHE.clear();
+  CAISSIER_HISTORY_CACHE.clear();
+  CAISSIER_TRANSACTIONS_CACHE.clear();
+}
+
+const MOCK_STORE_HISTORY: CaissierStoreHistoryItem[] = [
+  {
+    id: "h1",
+    storeName: "Zone 4",
+    location: "Abidjan",
+    dateFrom: "20/01/2025",
+    dateTo: null,
+  },
+  {
+    id: "h2",
+    storeName: "Angré 8e Tranche",
+    location: "",
+    dateFrom: "18/04/2024",
+    dateTo: "30/08/2025",
+  },
+  {
+    id: "h3",
+    storeName: "II Plateaux Latrille",
+    location: "",
+    dateFrom: "18/04/2024",
+    dateTo: "30/08/2025",
+  },
+];
+
+const CAISSIER_HISTORY_CACHE = new Map<string, CaissierStoreHistoryItem[]>();
+const CAISSIER_TRANSACTIONS_CACHE = new Map<string, CaissierRecentTransaction[]>();
+
+export function getCaissierStoreHistory(caissierId: string): CaissierStoreHistoryItem[] {
+  const cached = CAISSIER_HISTORY_CACHE.get(caissierId);
+  if (cached) return cached;
+  CAISSIER_HISTORY_CACHE.set(caissierId, MOCK_STORE_HISTORY);
+  return MOCK_STORE_HISTORY;
+}
+
+export function getCaissierRecentTransactions(caissierId: string): CaissierRecentTransaction[] {
+  const cached = CAISSIER_TRANSACTIONS_CACHE.get(caissierId);
+  if (cached) return cached;
+  const transactions: CaissierRecentTransaction[] = [
+    { id: "t1", type: "Paiement course", amount: 2500 },
+    { id: "t2", type: "Paiement course", amount: 2500 },
+    { id: "t3", type: "Paiement course", amount: 2500 },
+    { id: "t4", type: "Paiement course", amount: 2500 },
+  ];
+  CAISSIER_TRANSACTIONS_CACHE.set(caissierId, transactions);
+  return transactions;
 }

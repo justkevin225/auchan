@@ -16,12 +16,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Button } from '../ui/button';
 
-function getUsernameFromCookie(): string {
-  if (typeof document === "undefined") return "Utilisateur";
-  const match = document.cookie.match(/auth_user=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : "Utilisateur";
-}
+const MOCK_USER_DISPLAY_NAME = "Kevin Kouakou";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Tableau de bord" },
@@ -82,9 +79,6 @@ export function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const [displayName] = useState(() =>
-    typeof document !== "undefined" ? getUsernameFromCookie() : "Utilisateur"
-  );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -93,7 +87,6 @@ export function Header() {
 
   const handleLogout = () => {
     document.cookie = "auth=; path=/; max-age=0;";
-    document.cookie = "auth_user=; path=/; max-age=0;";
     setLogoutDialogOpen(false);
     router.push("/login");
   };
@@ -222,19 +215,19 @@ export function Header() {
         </nav>
 
         <div ref={userDropdownRef} className="relative hidden md:block">
-          <button
-            type="button"
+          <div
+            role="button"
             onClick={(e) => {
               e.stopPropagation();
               setUserDropdownOpen((o) => !o);
             }}
-            className="flex items-center gap-1 rounded-lg p-1 text-foreground hover:bg-muted/60 transition-colors"
+            className="cursor-pointer flex items-center gap-1 rounded-full p-1 text-foreground hover:bg-muted/60 transition-colors"
             aria-expanded={userDropdownOpen}
             aria-haspopup="true"
             aria-label="Menu utilisateur"
           >
             <Avatar size="default" className="size-9">
-              <AvatarImage src="/images/me.png" alt={displayName} />
+              <AvatarImage src="/images/me.png" alt={MOCK_USER_DISPLAY_NAME} />
               <AvatarFallback>
                 <CircleUserIcon className="size-5 text-muted-foreground" />
               </AvatarFallback>
@@ -242,7 +235,7 @@ export function Header() {
             <ChevronDown
               className={`size-4 shrink-0 transition-transform ${userDropdownOpen ? "rotate-180" : ""}`}
             />
-          </button>
+          </div>
           <div
             className={`absolute right-0 top-full pt-1 transition-all duration-150 ${userDropdownOpen
               ? "opacity-100 visible pointer-events-auto"
@@ -250,19 +243,16 @@ export function Header() {
               }`}
           >
             <div className="rounded-lg border border-border bg-popover shadow-md p-1 min-w-[200px]">
-              <div className="px-4 py-2.5 border-b border-border">
+              <div className="px-2 flex items-center justify-between">
                 <p className="text-sm font-medium text-foreground truncate">
-                  {displayName}
+                  {MOCK_USER_DISPLAY_NAME}
                 </p>
+
+                <Button variant="ghost" size="icon" onClick={openLogoutDialog}>
+                  <LogOut className="size-4 shrink-0" />
+                </Button>
               </div>
-              <button
-                type="button"
-                onClick={openLogoutDialog}
-                className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-foreground hover:bg-muted/60 transition-colors"
-              >
-                <LogOut className="size-4 shrink-0" />
-                Se déconnecter
-              </button>
+
             </div>
           </div>
         </div>
@@ -316,25 +306,25 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
               />
             ))}
-            <button
-              type="button"
+            <div
+              role="button"
               onClick={() => {
                 setMobileOpen(false);
                 setLogoutDialogOpen(true);
               }}
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-foreground mt-2 font-sana-regular hover:bg-muted/60 transition-colors w-full text-left"
+              className="cursor-pointer flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-foreground mt-2 font-sana-regular hover:bg-muted/60 transition-colors w-full text-left"
             >
               <Avatar size="default" className="size-9 shrink-0">
-                <AvatarImage src="/images/me.png" alt={displayName} />
+                <AvatarImage src="/images/me.png" alt={MOCK_USER_DISPLAY_NAME} />
                 <AvatarFallback>
                   <CircleUserIcon className="size-5 text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
               <span className="min-w-0 max-w-[180px] line-clamp-1">
-                {displayName}
+                {MOCK_USER_DISPLAY_NAME}
               </span>
               <LogOut className="size-4 shrink-0 ml-auto" />
-            </button>
+            </div>
           </nav>
         </div>
       </div>
