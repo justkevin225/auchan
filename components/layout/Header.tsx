@@ -1,10 +1,27 @@
 "use client";
 
-import { ChevronDown, CircleUserIcon, Menu, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ChevronDown, CircleUserIcon, LogOut, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
+function getUsernameFromCookie(): string {
+  if (typeof document === "undefined") return "Utilisateur";
+  const match = document.cookie.match(/auth_user=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : "Utilisateur";
+}
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Tableau de bord" },
@@ -18,8 +35,16 @@ const NAV_LINKS = [
 const OVERFLOW_LINKS = [
   { href: "/statistics", label: "Statistiques", showClass: "flex" },
   { href: "/management", label: "Gestions", showClass: "flex" },
-  { href: "/clients", label: "Clients", showClass: "hidden max-[1000px]:flex" },
-  { href: "/transactions", label: "Transactions", showClass: "hidden max-[800px]:flex" },
+  {
+    href: "/clients",
+    label: "Clients",
+    showClass: "hidden max-[1000px]:flex",
+  },
+  {
+    href: "/transactions",
+    label: "Transactions",
+    showClass: "hidden max-[800px]:flex",
+  },
 ] as const;
 
 function NavLink({
@@ -52,26 +77,52 @@ function NavLink({
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [displayName] = useState(() =>
+    typeof document !== "undefined" ? getUsernameFromCookie() : "Utilisateur"
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const isActive = (href: string) =>
-    href === "/dashboard"
-      ? pathname === "/dashboard"
-      : pathname.startsWith(href);
+    href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
+
+  const handleLogout = () => {
+    document.cookie = "auth=; path=/; max-age=0;";
+    document.cookie = "auth_user=; path=/; max-age=0;";
+    setLogoutDialogOpen(false);
+    router.push("/login");
+  };
+
+  const openLogoutDialog = () => {
+    setUserDropdownOpen(false);
+    setLogoutDialogOpen(true);
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(e.target as Node)
+      ) {
+        setUserDropdownOpen(false);
+      }
     }
-    if (dropdownOpen) {
+    if (dropdownOpen || userDropdownOpen) {
       document.addEventListener("click", handleClickOutside);
       return () => document.removeEventListener("click", handleClickOutside);
     }
-  }, [dropdownOpen]);
+  }, [dropdownOpen, userDropdownOpen]);
 
   return (
     <header className="fixed top-0 w-[90%] max-w-[1350px] left-1/2 -translate-x-1/2 z-50 bg-white rounded-2xl px-4 py-2 mt-4 font-sana-bold">
@@ -141,7 +192,8 @@ export function Header() {
             >
               Plus
               <ChevronDown
-                className={`size-4 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                className={`size-4 transition-transform ${dropdownOpen ? "rotate-180" : ""
+                  }`}
               />
             </button>
             <div
@@ -169,15 +221,68 @@ export function Header() {
           </div>
         </nav>
 
-        <div className="hidden md:block">
+        <div ref={userDropdownRef} className="relative hidden md:block">
           <button
             type="button"
-            className="size-9 shrink-0 rounded-full bg-gray-300 flex items-center justify-center text-muted-foreground hover:bg-gray-400 transition-colors"
-            aria-label="Profil utilisateur"
+            onClick={(e) => {
+              e.stopPropagation();
+              setUserDropdownOpen((o) => !o);
+            }}
+            className="flex items-center gap-1 rounded-lg p-1 text-foreground hover:bg-muted/60 transition-colors"
+            aria-expanded={userDropdownOpen}
+            aria-haspopup="true"
+            aria-label="Menu utilisateur"
           >
-            <CircleUserIcon className="size-5 text-white" />
+            <Avatar size="default" className="size-9">
+              <AvatarImage src="/images/me.png" alt={displayName} />
+              <AvatarFallback>
+                <CircleUserIcon className="size-5 text-muted-foreground" />
+              </AvatarFallback>
+            </Avatar>
+            <ChevronDown
+              className={`size-4 shrink-0 transition-transform ${userDropdownOpen ? "rotate-180" : ""}`}
+            />
           </button>
+          <div
+            className={`absolute right-0 top-full pt-1 transition-all duration-150 ${userDropdownOpen
+              ? "opacity-100 visible pointer-events-auto"
+              : "opacity-0 invisible pointer-events-none"
+              }`}
+          >
+            <div className="rounded-lg border border-border bg-popover shadow-md p-1 min-w-[200px]">
+              <div className="px-4 py-2.5 border-b border-border">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {displayName}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={openLogoutDialog}
+                className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-foreground hover:bg-muted/60 transition-colors"
+              >
+                <LogOut className="size-4 shrink-0" />
+                Se déconnecter
+              </button>
+            </div>
+          </div>
         </div>
+
+        <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Déconnexion</AlertDialogTitle>
+              <AlertDialogDescription>
+                Êtes-vous sûr de vouloir vous déconnecter ?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleLogout}>
+                Se déconnecter
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div className="flex items-center gap-2 md:hidden">
           <button
@@ -211,19 +316,25 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
               />
             ))}
-            <Link
-              href="#"
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-foreground mt-2 font-sana-regular hover:bg-muted/60 transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
+            <button
+              type="button"
+              onClick={() => {
                 setMobileOpen(false);
+                setLogoutDialogOpen(true);
               }}
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-foreground mt-2 font-sana-regular hover:bg-muted/60 transition-colors w-full text-left"
             >
-              <span className="size-9 shrink-0 rounded-full bg-muted flex items-center justify-center">
-                <CircleUserIcon className="size-5 text-white" />
+              <Avatar size="default" className="size-9 shrink-0">
+                <AvatarImage src="/images/me.png" alt={displayName} />
+                <AvatarFallback>
+                  <CircleUserIcon className="size-5 text-muted-foreground" />
+                </AvatarFallback>
+              </Avatar>
+              <span className="min-w-0 max-w-[180px] line-clamp-1">
+                {displayName}
               </span>
-              <span className="min-w-0 max-w-[180px] line-clamp-1">Kevin Kouakou</span>
-            </Link>
+              <LogOut className="size-4 shrink-0 ml-auto" />
+            </button>
           </nav>
         </div>
       </div>
